@@ -1,4 +1,5 @@
 import { Component } from "react";
+import { SearchbarStyled, SearchForm } from "./Searchbar.styled";
 
 
 export class Searchbar extends Component {
@@ -34,8 +35,8 @@ export class Searchbar extends Component {
 
 		const { value } = this.state;
 		return (
-			<header>
-				<form onSubmit={this.handleSubmit}>
+			<SearchbarStyled>
+				<SearchForm onSubmit={this.handleSubmit}>
 					<button type="submit">
 						<span>Search</span>
 					</button>
@@ -47,8 +48,8 @@ export class Searchbar extends Component {
 						placeholder="Search images and photos"
 						onChange={this.handleChange}
 					/>
-				</form>
-			</header>
+				</SearchForm>
+			</SearchbarStyled>
 		);
 	};
 };
