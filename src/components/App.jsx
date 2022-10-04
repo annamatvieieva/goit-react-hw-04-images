@@ -6,6 +6,7 @@ import { Searchbar } from './Searchbar';
 import { ImageGallery } from './ImageGallery';
 import { Loader } from './Loader';
 import { Button } from './Button';
+import { ReactComponent as SearchIcon } from '../icons/search.svg';
 
 export class App extends PureComponent {
   state = {
@@ -62,7 +63,7 @@ export class App extends PureComponent {
     return (
       <>
         <GlobalStyle />
-        <Searchbar onSubmit={this.saveQuery} />
+        <Searchbar onSubmit={this.saveQuery}><SearchIcon/></Searchbar>
         <Box as="main" py={4}>
           <ImageGallery images={data} />
           {isLoading && <Loader />}

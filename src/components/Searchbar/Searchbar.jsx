@@ -29,11 +29,11 @@ export class Searchbar extends Component {
 
   render() {
     const { value } = this.state;
+    const { children } = this.props;
     return (
       <SearchbarStyled>
         <SearchForm onSubmit={this.handleSubmit}>
-          <button type="submit">
-            <span>Search</span>
+          <button type="submit">{children}
           </button>
           <input
             type="text"

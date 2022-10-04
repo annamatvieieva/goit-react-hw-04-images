@@ -7,10 +7,10 @@ export const theme = {
     red: '#ED2B28',
     text: '#2a2a2a',
     background: '#fff',
-    primary: '#DCDCDC',
-    secondary: '#C0C0C0',
+    primary: '#3f51b5',
+    secondary: '#303f9f',
     accent: '#25D3DB',
-    muted: '#f6f6f6',
+    muted: '#ff0066',
   },
   space: [0, 2, 4, 8, 16, 32, 64, 128, 256],
   fonts: {
@@ -39,7 +39,7 @@ export const theme = {
   },
   radii: {
     none: '0',
-    sm: '4px',
+    sm: '2px',
     md: '8px',
     lg: '16px',
     round: '50%',
