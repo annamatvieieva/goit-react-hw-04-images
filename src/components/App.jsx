@@ -15,6 +15,7 @@ export const App = () => {
   const [query, setQuery] = useState('');
   const [page, setPage] = useState(1);
   const [isLoading, setIsLoading] = useState(false);
+  const [disabled, setDisabled] = useState(false);
 
   const saveQuery = value => {
     setData([]);
@@ -42,8 +43,10 @@ export const App = () => {
         response = await getData(page, query);
         if (response.length !== 0) {
           setData(prevdata => [...prevdata, ...response]);
+          setDisabled(false);
         } else {
           notify('Sorry, but your search did not return any results.');
+          setDisabled(true);
         }
       } catch (error) {
         notify(error);
@@ -63,7 +66,7 @@ export const App = () => {
       <Box as="main" py={4}>
         <ImageGallery images={data} />
         {isLoading && <Loader />}
-        {data.length !== 0 && <Button onClick={loadMore} />}
+        {data.length !== 0 && <Button onClick={loadMore} disabled={disabled} />}
       </Box>
       <ToastContainer />
     </>

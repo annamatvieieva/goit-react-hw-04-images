@@ -2,9 +2,9 @@ import PropTypes from 'prop-types';
 import { LoadMore } from './Button.styled';
 
 
-export const Button = ({ onClick }) => {
+export const Button = ({ onClick, disabled }) => {
   return (
-    <LoadMore type="button" onClick={onClick}>
+    <LoadMore type="button" onClick={onClick} disabled={disabled}>
       Load More
     </LoadMore>
   );
