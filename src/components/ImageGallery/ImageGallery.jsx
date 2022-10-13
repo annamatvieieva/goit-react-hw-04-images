@@ -1,55 +1,44 @@
 import PropTypes from 'prop-types';
-import { Component } from 'react';
+import { useState } from 'react';
 import { ImageGalleryItem } from '../ImageGalleryItem';
 import { Modal } from '../Modal';
 import { ImageGalleryStyled } from './ImageGallery.styled';
 
-export class ImageGallery extends Component {
-  state = {
-    onCklickImage: {},
-    isCklicked: false,
-  };
+export const ImageGallery = ({ images }) => {
+  const [onClickImage, setOnClickImage] = useState({});
+  const [isClicked, setIsClicked] = useState(false);
 
-  onCloseModal = () => {
-    this.setState({ isCklicked: false });
-  };
-
-  handleClick = key => {
-    const { images } = this.props;
+  const handleClick = key => {
     const clickedImage = images.find(({ id }) => id === key);
-    this.setState({
-      onCklickImage: clickedImage,
-    });
-    this.setState({ isCklicked: true });
+    setOnClickImage(clickedImage);
+    setIsClicked(true);
   };
 
-  render() {
-    const { images } = this.props;
-    const { isCklicked, onCklickImage } = this.state;
-    return (
-      <>
-        <ImageGalleryStyled>
-          {images.map(({ id, webformatURL }) => {
-            return (
-              <ImageGalleryItem
-                onClick={this.handleClick}
-                key={id}
-                id={id}
-                href={webformatURL}
-              />
-            );
-          })}
-        </ImageGalleryStyled>
-        {isCklicked && (
-          <Modal
-            onClose={this.onCloseModal}
-            href={onCklickImage.largeImageURL}
-          />
-        )}
-      </>
-    );
-  }
-}
+  return (
+    <>
+      <ImageGalleryStyled>
+        {images.map(({ id, webformatURL }) => {
+          return (
+            <ImageGalleryItem
+              onClick={handleClick}
+              key={id}
+              id={id}
+              href={webformatURL}
+            />
+          );
+        })}
+      </ImageGalleryStyled>
+      {isClicked && (
+        <Modal
+          onClose={() => {
+            setIsClicked(false);
+          }}
+          href={onClickImage.largeImageURL}
+        />
+      )}
+    </>
+  );
+};
 
 ImageGallery.propTypes = {
   images: PropTypes.arrayOf(PropTypes.object).isRequired,

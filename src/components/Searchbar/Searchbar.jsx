@@ -1,53 +1,48 @@
 import PropTypes from 'prop-types';
-import { Component } from 'react';
+import { useState } from 'react';
+import { toast, ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import { SearchbarStyled, SearchForm } from './Searchbar.styled';
 
-export class Searchbar extends Component {
-  state = {
-    value: '',
-  };
+export const Searchbar = ({ children, onSubmit }) => {
+  const [value, setValue] = useState('');
 
-  handleChange = e => {
+  const handleChange = e => {
     const { value } = e.target;
-    this.setState({ value });
+    setValue(value);
   };
 
-  reset = e => {
-    this.setState({ value: '' });
+  const notify = () => {
+    toast.error('You did not enter anything to search for...');
   };
 
-  handleSubmit = e => {
+  const handleSubmit = e => {
     e.preventDefault();
-    const { value } = this.state;
     if (value.trim() === '') {
-      alert('You did not enter anything to search for...');
+      notify();
     } else {
-      this.props.onSubmit(value);
-      this.reset();
+      onSubmit(value);
+      setValue('');
     }
   };
 
-  render() {
-    const { value } = this.state;
-    const { children } = this.props;
-    return (
-      <SearchbarStyled>
-        <SearchForm onSubmit={this.handleSubmit}>
-          <button type="submit">{children}
-          </button>
-          <input
-            type="text"
-            value={value}
-            autoComplete="off"
-            autoFocus
-            placeholder="Search images and photos"
-            onChange={this.handleChange}
-          />
-        </SearchForm>
-      </SearchbarStyled>
-    );
-  }
-}
+  return (
+    <SearchbarStyled>
+      <SearchForm onSubmit={handleSubmit}>
+        <button type="submit">{children}</button>
+        <input
+          type="text"
+          value={value}
+          autoComplete="off"
+          autoFocus
+          placeholder="Search images and photos"
+          onChange={handleChange}
+        />
+      </SearchForm>
+      <ToastContainer />
+    </SearchbarStyled>
+  );
+};
 
 Searchbar.propTypes = {
   onSubmit: PropTypes.func.isRequired,

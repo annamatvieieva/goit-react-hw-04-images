@@ -1,4 +1,6 @@
-import { PureComponent } from 'react';
+import { useState, useEffect } from 'react';
+import { toast, ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import { GlobalStyle } from './GlobalStyle';
 import { Box } from './Box';
 import { getData } from 'services/api';
@@ -8,68 +10,62 @@ import { Loader } from './Loader';
 import { Button } from './Button';
 import { ReactComponent as SearchIcon } from '../icons/search.svg';
 
-export class App extends PureComponent {
-  state = {
-    data: [],
-    query: '',
-    page: 1,
-    isLoading: false,
+export const App = () => {
+  const [data, setData] = useState([]);
+  const [query, setQuery] = useState('');
+  const [page, setPage] = useState(1);
+  const [isLoading, setIsLoading] = useState(false);
+
+  const saveQuery = value => {
+    setData([]);
+    setQuery(value);
+    setPage(1);
   };
 
-  saveQuery = value => {
-    this.setState({
-      query: value,
-      data: [],
-      page: 1,
-    });
+  const loadMore = () => {
+    setPage(prevpage => prevpage + 1);
   };
 
-  loadMore = () => {
-    this.setState(prevState => ({
-      page: prevState.page + 1,
-    }));
+  const notify = message => {
+    toast.error(message);
   };
 
-  async componentDidUpdate(prevProps, prevState) {
-    const { query, page } = this.state;
-    let response;
-    if (
-      prevState.page !== this.state.page ||
-      prevState.query !== this.state.query
-    ) {
-      this.setState({
-        isLoading: true,
-      });
+  useEffect(() => {
+    if (query === '') {
+      return;
+    }
+
+    async function fetchValidation() {
+      let response;
+      setIsLoading(true);
       try {
         response = await getData(page, query);
         if (response.length !== 0) {
-          this.setState(prevState => ({
-            data: [...prevState.data, ...response],
-          }));
+          setData(prevdata => [...prevdata, ...response]);
+        } else {
+          notify('Sorry, but your search did not return any results.');
         }
       } catch (error) {
-        console.log(error.message);
+        notify(error);
       } finally {
-        this.setState({ isLoading: false });
-        if (response.length === 0) {
-          alert('Sorry, but your search did not return any results.');
-        }
+        setIsLoading(false);
       }
     }
-  }
+    fetchValidation();
+  }, [query, page]);
 
-  render() {
-    const { data, isLoading } = this.state;
-    return (
-      <>
-        <GlobalStyle />
-        <Searchbar onSubmit={this.saveQuery}><SearchIcon/></Searchbar>
-        <Box as="main" py={4}>
-          <ImageGallery images={data} />
-          {isLoading && <Loader />}
-          {data.length !== 0 && <Button onClick={this.loadMore} />}
-        </Box>
-      </>
-    );
-  }
-}
+  return (
+    <>
+      <GlobalStyle />
+      <Searchbar onSubmit={saveQuery}>
+        <SearchIcon />
+      </Searchbar>
+      <Box as="main" py={4}>
+        <ImageGallery images={data} />
+        {isLoading && <Loader />}
+        {data.length !== 0 && <Button onClick={loadMore} />}
+      </Box>
+      <ToastContainer />
+    </>
+  );
+};
